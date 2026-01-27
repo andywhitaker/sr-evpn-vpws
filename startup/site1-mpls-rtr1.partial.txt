@@ -1,0 +1,69 @@
+/configure port 1/1/1 admin-state enable
+/configure port 1/1/1 ethernet mode access
+/configure port 1/1/2 admin-state enable
+/configure port 1/1/2 ethernet mode access
+/configure port 1/1/3 admin-state enable
+/configure port 1/1/3 ethernet mode network
+/configure router "Base" autonomous-system 65500
+/configure router "Base" interface "system" admin-state enable
+/configure router "Base" interface "system" ipv4 primary address 11.11.11.11
+/configure router "Base" interface "system" ipv4 primary prefix-length 32
+/configure router "Base" interface "to-site2-mpls-rtr1" admin-state enable
+/configure router "Base" interface "to-site2-mpls-rtr1" ipv4 primary address 10.11.21.11
+/configure router "Base" interface "to-site2-mpls-rtr1" ipv4 primary prefix-length 24
+/configure router "Base" interface "to-site2-mpls-rtr1" port 1/1/3
+/configure router "Base" mpls-labels static-label-range 11968
+/configure router "Base" mpls-labels sr-labels start 12000
+/configure router "Base" mpls-labels sr-labels end 19999
+/configure router "Base" bgp admin-state enable
+/configure router "Base" bgp rapid-update evpn true
+/configure router "Base" bgp group "evpn" peer-as 65500
+/configure router "Base" bgp group "evpn" type internal
+/configure router "Base" bgp group "evpn" family evpn true
+/configure router "Base" bgp neighbor "21.21.21.21" group "evpn"
+/configure router "Base" bgp neighbor "21.21.21.21" local-address 11.11.11.11
+/configure router "Base" isis 0 admin-state enable
+/configure router "Base" isis 0 advertise-router-capability as
+/configure router "Base" isis 0 traffic-engineering true
+/configure router "Base" isis 0 area-address [49.0000]
+/configure router "Base" isis 0 traffic-engineering-options application-link-attributes
+/configure router "Base" isis 0 segment-routing admin-state enable
+/configure router "Base" isis 0 segment-routing prefix-sid-range global
+/configure router "Base" isis 0 interface "system" passive true
+/configure router "Base" isis 0 interface "system" interface-type point-to-point
+/configure router "Base" isis 0 interface "system" ipv4-node-sid index 11
+/configure router "Base" isis 0 interface "system" level-capability 2
+/configure router "Base" isis 0 interface "to-site2-mpls-rtr1" interface-type point-to-point
+/configure router "Base" isis 0 interface "to-site2-mpls-rtr1" level-capability 2
+/configure router "Base" isis 0 level 2 wide-metrics-only true
+/configure router "Base" mpls admin-state enable
+/configure router "Base" mpls interface "to-site2-mpls-rtr1"
+/configure router "Base" rsvp admin-state enable
+/configure router "Base" rsvp interface "to-site2-mpls-rtr1" admin-state disable
+/configure service customer tenant1 customer-id 100
+/configure service epipe "inside-1" admin-state enable
+/configure service epipe "inside-1" description "VPWS for inside-1"
+/configure service epipe "inside-1" service-id 101
+/configure service epipe "inside-1" customer "tenant1"
+/configure service epipe "inside-1" bgp 1 route-distinguisher "11.11.11.11:1001"
+/configure service epipe "inside-1" bgp 1 route-target export "target:1001:1001"
+/configure service epipe "inside-1" bgp 1 route-target import "target:1001:1001"
+/configure { service epipe "inside-1" sap 1/1/1 }
+/configure service epipe "inside-1" bgp-evpn local-attachment-circuit "local" eth-tag 1001
+/configure service epipe "inside-1" bgp-evpn remote-attachment-circuit "remote" eth-tag 2001
+/configure service epipe "inside-1" bgp-evpn mpls 1 admin-state enable
+/configure service epipe "inside-1" bgp-evpn mpls 1 auto-bind-tunnel resolution filter
+/configure service epipe "inside-1" bgp-evpn mpls 1 auto-bind-tunnel resolution-filter sr-isis true
+/configure service epipe "outside-1" admin-state enable
+/configure service epipe "outside-1" description "VPWS for outside-1"
+/configure service epipe "outside-1" service-id 102
+/configure service epipe "outside-1" customer "tenant1"
+/configure service epipe "outside-1" bgp 1 route-distinguisher "11.11.11.11:1002"
+/configure service epipe "outside-1" bgp 1 route-target export "target:1002:1002"
+/configure service epipe "outside-1" bgp 1 route-target import "target:1002:1002"
+/configure { service epipe "outside-1" sap 1/1/2 }
+/configure service epipe "outside-1" bgp-evpn local-attachment-circuit "local" eth-tag 1002
+/configure service epipe "outside-1" bgp-evpn remote-attachment-circuit "remote" eth-tag 2002
+/configure service epipe "outside-1" bgp-evpn mpls 1 admin-state enable
+/configure service epipe "outside-1" bgp-evpn mpls 1 auto-bind-tunnel resolution filter
+/configure service epipe "outside-1" bgp-evpn mpls 1 auto-bind-tunnel resolution-filter sr-isis true

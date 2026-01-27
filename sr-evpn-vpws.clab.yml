@@ -1,0 +1,92 @@
+name: sr-evpn-vpws
+
+topology:
+  nodes:
+    site1-inside-rtr:
+      kind: arista_ceos
+      image: ceos:4.35.1F
+      env:
+        INTFTYPE: et
+      startup-config: startup/site1-inside-rtr.txt
+    site1-outside-rtr:
+      kind: arista_ceos
+      image: ceos:4.35.1F
+      env:
+        INTFTYPE: et
+      startup-config: startup/site1-outside-rtr.txt
+    site2-inside-rtr:
+      kind: arista_ceos
+      image: ceos:4.35.1F
+      env:
+        INTFTYPE: et
+      startup-config: startup/site2-inside-rtr.txt
+    site2-outside-rtr:
+      kind: arista_ceos
+      image: ceos:4.35.1F
+      env:
+        INTFTYPE: et
+      startup-config: startup/site2-outside-rtr.txt
+    site1-mpls-rtr1:
+      kind: nokia_srsim
+      type: ixr-s
+      image: localhost/nokia/srsim:25.10.R2
+      license: srsim25.lic
+      components:
+        - slot: A
+        - slot: 1
+      startup-config: startup/site1-mpls-rtr1.partial.txt
+    site1-mpls-rtr2:
+      kind: nokia_srsim
+      type: ixr-s
+      image: localhost/nokia/srsim:25.10.R2
+      license: srsim25.lic
+      components:
+        - slot: A
+        - slot: 1
+      startup-config: startup/site1-mpls-rtr2.partial.txt
+    site2-mpls-rtr1:
+      kind: nokia_srsim
+      type: ixr-s
+      image: localhost/nokia/srsim:25.10.R2
+      license: srsim25.lic
+      components:
+        - slot: A
+        - slot: 1
+      startup-config: startup/site2-mpls-rtr1.partial.txt
+    site2-mpls-rtr2:
+      kind: nokia_srsim
+      type: ixr-s
+      image: localhost/nokia/srsim:25.10.R2
+      license: srsim25.lic
+      components:
+        - slot: A
+        - slot: 1
+      startup-config: startup/site2-mpls-rtr2.partial.txt
+
+  links:
+    - endpoints: [ "site1-inside-rtr:et1", "site1-mpls-rtr1:1/1/1" ]
+    - endpoints: [ "site1-inside-rtr:et2", "site1-mpls-rtr2:1/1/1" ]
+    - endpoints: [ "site1-mpls-rtr1:1/1/2", "site1-outside-rtr:et1" ]
+    - endpoints: [ "site1-mpls-rtr2:1/1/2", "site1-outside-rtr:et2" ]
+    - endpoints: [ "site2-inside-rtr:et1", "site2-mpls-rtr1:1/1/1" ]
+    - endpoints: [ "site2-inside-rtr:et2", "site2-mpls-rtr2:1/1/1" ]
+    - endpoints: [ "site2-outside-rtr:et1", "site2-mpls-rtr1:1/1/2" ]
+    - endpoints: [ "site2-outside-rtr:et2", "site2-mpls-rtr2:1/1/2" ]
+    - endpoints: [ "site1-mpls-rtr1:1/1/3", "site2-mpls-rtr1:1/1/3" ]
+    - endpoints: [ "site1-mpls-rtr2:1/1/3", "site2-mpls-rtr2:1/1/3" ]
+    - type: dummy
+      endpoint:
+        node: "site1-inside-rtr"
+        interface: "et3"
+    - type: dummy
+      endpoint:
+        node: "site1-outside-rtr"
+        interface: "et3"
+    - type: dummy
+      endpoint:
+        node: "site2-inside-rtr"
+        interface: "et3"
+    - type: dummy
+      endpoint:
+        node: "site2-outside-rtr"
+        interface: "et3"

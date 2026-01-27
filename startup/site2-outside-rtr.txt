@@ -1,0 +1,69 @@
+! Command: show running-config
+! device: site2-outside-rtr (cEOSLab, EOS-4.35.1F-45295350.4351F.1 (engineering build))
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$/Ocu2DBWUNjPzOAX$.R7bvV77iZ.6D3onKv3sWW2EetY/2ufmHdBJ6mkHFFc1uJ3LfbVkRZ69tKAbmGTCkFVIDdfOva9hsKxrbAHsZ/
+!
+management api http-commands
+   no shutdown
+!
+switchport default mode routed
+!
+no service interface inactive port-id allocation disabled
+!
+service routing protocols model multi-agent
+!
+hostname site2-outside-rtr
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+management api gnmi
+   transport grpc default
+!
+management api netconf
+   transport ssh default
+!
+interface Ethernet1
+   no switchport
+   ip address 172.16.2.1/31
+!
+interface Ethernet2
+   no switchport
+   ip address 172.16.2.3/31
+!
+interface Ethernet3
+   no switchport
+   ip address 192.168.22.1/24
+!
+interface Management0
+   ip address 172.20.20.8/24
+   ipv6 address 3fff:172:20:20::8/64
+!
+ip routing
+!
+ip route 0.0.0.0/0 172.20.20.1
+!
+ipv6 route ::/0 3fff:172:20:20::1
+!
+router bgp 200
+   router-id 200.200.200.200
+   neighbor 172.16.2.0 remote-as 100
+   neighbor 172.16.2.0 import-localpref 120
+   neighbor 172.16.2.0 rib-in pre-policy retain all
+   neighbor 172.16.2.2 remote-as 100
+   neighbor 172.16.2.2 rib-in pre-policy retain all
+   network 192.168.22.0/24
+!
+router multicast
+   ipv4
+      software-forwarding kernel
+   !
+   ipv6
+      software-forwarding kernel
+!
+end

@@ -1,0 +1,10 @@
+# Containerlab Artifacts
+clab-*/
+.*.clab.yml.bak
+
+# License Files
+*.lic
+
+
+.env
+.vscode/
