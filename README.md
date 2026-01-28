@@ -63,6 +63,41 @@ Flags: B = BGP or MPLS backup hop available
 ===============================================================================
 ```
 
+
+The detailed output includes the transport label information used to reach the destination routers:
+
+```
+A:admin@site1-mpls-rtr1-a# show router tunnel-table detail
+
+===============================================================================
+Tunnel Table (Router: Base)
+===============================================================================
+Destination      : 10.11.21.21/32
+NextHop          : 10.11.21.21
+Tunnel Flags     : is-adjacency-tunnel
+Age              : 00h37m26s
+CBF Classes      : (Not Specified)
+Owner            : isis (0)             Encap            : MPLS
+Tunnel ID        : 524289               Preference       : 11
+Tunnel Label     : 3                    Tunnel Metric    : 0
+Tunnel MTU       : 8918                 Max Label Stack  : 1
+-------------------------------------------------------------------------------
+Destination      : 21.21.21.21/32
+NextHop          : 10.11.21.21
+Tunnel Flags     : (Not Specified)
+Age              : 00h37m25s
+CBF Classes      : (Not Specified)
+Owner            : isis (0)             Encap            : MPLS
+Tunnel ID        : 524290               Preference       : 11
+Tunnel Label     : 12021                Tunnel Metric    : 10
+Tunnel MTU       : 8918                 Max Label Stack  : 1
+-------------------------------------------------------------------------------
+Number of tunnel-table entries          : 2
+Number of tunnel-table entries with LFA : 0
+===============================================================================
+```
+
+
 ### Router BGP Summary
 
 ```
@@ -115,3 +150,10 @@ u*>i  21.21.21.21:1002    ESI-0                         21.21.21.21
 Routes : 2
 ===============================================================================
 ```
+
+> [!NOTE]
+> The MPLS label listed under the BGP EVPN route above is *not* the transport label
+> used for routing to the remote router (which is seen the the `show mpls tunnel-table
+> detail` command), but rather this label identifies the specific overlay service and
+> sits below the transport labels in the stack. The remote router will read this label
+> to place the traffic into the correct VPN service.
