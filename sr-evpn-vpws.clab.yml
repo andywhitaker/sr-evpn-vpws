@@ -4,25 +4,25 @@ topology:
   nodes:
     site1-inside-rtr:
       kind: arista_ceos
-      image: ceos:4.35.1F
+      image: ceos:4.35.2F
       env:
         INTFTYPE: et
       startup-config: startup/site1-inside-rtr.txt
     site1-outside-rtr:
       kind: arista_ceos
-      image: ceos:4.35.1F
+      image: ceos:4.35.2F
       env:
         INTFTYPE: et
       startup-config: startup/site1-outside-rtr.txt
     site2-inside-rtr:
       kind: arista_ceos
-      image: ceos:4.35.1F
+      image: ceos:4.35.2F
       env:
         INTFTYPE: et
       startup-config: startup/site2-inside-rtr.txt
     site2-outside-rtr:
       kind: arista_ceos
-      image: ceos:4.35.1F
+      image: ceos:4.35.2F
       env:
         INTFTYPE: et
       startup-config: startup/site2-outside-rtr.txt
